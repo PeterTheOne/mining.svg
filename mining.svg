@@ -12,7 +12,7 @@
   </style>
 
   <rect id="backgroundColor" x="0" y="0" width="200" height="200" fill="orange" />
-  <text id="hashesPerSecondBig" x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="350" font-weight="900" fill="palegreen" clip-path="url(#clip)">0 hashes/s</text>
+  <text id="hashesPerSecondBig" x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="300" font-weight="900" fill="palegreen" clip-path="url(#clip)">0 hashes/s</text>
 
   <text id="startStop" x="100" y="20" text-anchor="middle" dominant-baseline="central" font-size="10">start</text>
   <text id="threads" x="100" y="35" text-anchor="middle" dominant-baseline="central" font-size="10">0 threads</text>
